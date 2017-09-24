@@ -39,16 +39,16 @@ class Dispatcher: public MThread {
 	bool peersOn,closed;
 	pthread_mutex_t mutex;
 	bool peeread;
-	void printLoggedUsers(TCPSocket* peer);
 public:
 	Dispatcher(DispatcherHandler* handler);
 	void addPeer(TCPSocket* peer);
-	bool removePeer(TCPSocket* peer);
+//	bool removePeer(TCPSocket* peer);
 	int sendFeedback(TCPSocket* peer, int command);
 	int readCommand(TCPSocket* peer);
-	int getPeerIndex(string ip,int port);
+//	int getPeerIndex(string ip,int port);
 	virtual void run();
-	void close();
+//	void close();
+	void printLoggedUsers(TCPSocket* peer);
 	virtual ~Dispatcher();
 };
 

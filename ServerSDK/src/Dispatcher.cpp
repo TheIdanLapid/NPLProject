@@ -21,40 +21,40 @@ Dispatcher::Dispatcher(DispatcherHandler* handler) {
 	um = new UserManager(fm);
 }
 
-bool Dispatcher::removePeer(TCPSocket* peer){
-	if (peer==NULL)
-	{
-		cout<<"Dispatcher: PEER IS NULL!"<<endl;
-		return false;
-	}
-	int i = 0;
-	tSockets::iterator iter = peers->sockets.begin();
-	for(;iter!= peers->sockets.end();iter++)
-	{
-		if (*iter!=NULL)
-		{
-			TCPSocket* curr = *iter;
-//			cout<<curr<<"Dispatcher: is the current socket with port: "<<curr->getPort()<<endl;
-			if(curr->getIP()==peer->getIP() && curr->getPort()==peer->getPort()){
-//				cout<<"Dispatcher: Peer index to delete: "<<i<<endl;
-				cout<<"Dispatcher: Peer to delete: "<<peers->sockets[i]->getPort()<<endl;
-				Guard guard(&mutex);
-				peers->sockets.erase(peers->sockets.begin()+i);
-				if(peers->sockets.size()==0){
-					peersOn = false;
-				}
-				return true;
-			}
-			i++;
-		}
-		else
-		{
-			cout<<"Dispatcher: iter null"<<endl;
-		}
-	}
-	return false;
-
-}
+//bool Dispatcher::removePeer(TCPSocket* peer){
+//	if (peer==NULL)
+//	{
+//		cout<<"Dispatcher: PEER IS NULL!"<<endl;
+//		return false;
+//	}
+//	int i = 0;
+//	tSockets::iterator iter = peers->sockets.begin();
+//	for(;iter!= peers->sockets.end();iter++)
+//	{
+//		if (*iter!=NULL)
+//		{
+//			TCPSocket* curr = *iter;
+////			cout<<curr<<"Dispatcher: is the current socket with port: "<<curr->getPort()<<endl;
+//			if(curr->getIP()==peer->getIP() && curr->getPort()==peer->getPort()){
+////				cout<<"Dispatcher: Peer index to delete: "<<i<<endl;
+//				cout<<"Dispatcher: Peer to delete: "<<peers->sockets[i]->getPort()<<endl;
+//				Guard guard(&mutex);
+//				peers->sockets.erase(peers->sockets.begin()+i);
+//				if(peers->sockets.size()==0){
+//					peersOn = false;
+//				}
+//				return true;
+//			}
+//			i++;
+//		}
+//		else
+//		{
+//			cout<<"Dispatcher: iter null"<<endl;
+//		}
+//	}
+//	return false;
+//
+//}
 
 
 void Dispatcher::addPeer(TCPSocket* sock){
@@ -154,7 +154,7 @@ void Dispatcher::run(){
 						User* user = new User(name,pass);
 						user->setTcp(peer);
 						user->setLoggedIn(true);
-						tcpMap.insert(make_pair(peer,user));
+						tcpMap.insert(make_pair(peer,*user));
 					}
 					break;
 				case SHOW_USERS:
@@ -214,8 +214,9 @@ void Dispatcher::run(){
 void Dispatcher::printLoggedUsers(TCPSocket* peer) {
 	map<TCPSocket*, User>::iterator pos;
 	for (pos = tcpMap.begin(); pos != tcpMap.end(); ++pos) {
+		User user = pos->second;
 //		cout << "key: " << pos->first << " values: pass: " << pos->second.first << " score: " <<pos->second.second << endl;
-		int res = peer->write((char*)&pos->first+'\n',sizeof(pos->first)+1);
+		int res = peer->write((char*)&user.getName()+'\n',sizeof(user.getName())+1);
 
 		if (res<4) {
 			cout<<"Dispatcher: Could not print name! "<<endl;

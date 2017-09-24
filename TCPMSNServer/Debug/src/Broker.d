@@ -1,32 +1,32 @@
-src/Broker.d: ../src/Broker.cpp ../src/Broker.h \
- /home/user/Desktop/lab10/SocketUtils/src/MThread.h \
- /home/user/Desktop/lab10/SocketUtils/src/TCPSocket.h \
- /home/user/Desktop/lab10/SocketUtils/src/Socket.h \
- /home/user/Desktop/lab10/SocketUtils/src/MThread.h \
- /home/user/Desktop/lab10/SocketUtils/src/FileInterface.h \
- /home/user/Desktop/lab10/SocketUtils/src/TCPMessengerProtocol.h \
- /home/user/Desktop/lab10/SocketUtils/src/MTCPListener.h \
- /home/user/Desktop/lab10/SocketUtils/src/TCPSocket.h \
- ../src/BrokerManager.h /home/user/Desktop/lab10/SocketUtils/src/Guard.h
+src/Broker.o: ../src/Broker.cpp ../src/Broker.h \
+ /home/eontorch/NPLgit/SocketUtils/src/MThread.h \
+ /home/eontorch/NPLgit/SocketUtils/src/TCPSocket.h \
+ /home/eontorch/NPLgit/SocketUtils/src/Socket.h \
+ /home/eontorch/NPLgit/SocketUtils/src/MThread.h \
+ /home/eontorch/NPLgit/SocketUtils/src/FileInterface.h \
+ /home/eontorch/NPLgit/SocketUtils/src/TCPMessengerProtocol.h \
+ /home/eontorch/NPLgit/SocketUtils/src/MTCPListener.h \
+ /home/eontorch/NPLgit/SocketUtils/src/TCPSocket.h ../src/BrokerManager.h \
+ /home/eontorch/NPLgit/SocketUtils/src/Guard.h
 
 ../src/Broker.h:
 
-/home/user/Desktop/lab10/SocketUtils/src/MThread.h:
+/home/eontorch/NPLgit/SocketUtils/src/MThread.h:
 
-/home/user/Desktop/lab10/SocketUtils/src/TCPSocket.h:
+/home/eontorch/NPLgit/SocketUtils/src/TCPSocket.h:
 
-/home/user/Desktop/lab10/SocketUtils/src/Socket.h:
+/home/eontorch/NPLgit/SocketUtils/src/Socket.h:
 
-/home/user/Desktop/lab10/SocketUtils/src/MThread.h:
+/home/eontorch/NPLgit/SocketUtils/src/MThread.h:
 
-/home/user/Desktop/lab10/SocketUtils/src/FileInterface.h:
+/home/eontorch/NPLgit/SocketUtils/src/FileInterface.h:
 
-/home/user/Desktop/lab10/SocketUtils/src/TCPMessengerProtocol.h:
+/home/eontorch/NPLgit/SocketUtils/src/TCPMessengerProtocol.h:
 
-/home/user/Desktop/lab10/SocketUtils/src/MTCPListener.h:
+/home/eontorch/NPLgit/SocketUtils/src/MTCPListener.h:
 
-/home/user/Desktop/lab10/SocketUtils/src/TCPSocket.h:
+/home/eontorch/NPLgit/SocketUtils/src/TCPSocket.h:
 
 ../src/BrokerManager.h:
 
-/home/user/Desktop/lab10/SocketUtils/src/Guard.h:
+/home/eontorch/NPLgit/SocketUtils/src/Guard.h:

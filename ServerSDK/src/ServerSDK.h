@@ -13,13 +13,14 @@
 
 using namespace std;
 
-class ServerSDK : public AcceptorHandler {
+class ServerSDK : public AcceptorHandler, DispatcherHandler {
 	Acceptor* acceptor;
 	Dispatcher* dispacher;
 //	GameManager* gameManager;
 public:
 	ServerSDK();
-	void handlePeer(TCPSocket* peer);
+	virtual void handlePeer(TCPSocket* peer);
+	virtual int openGameSession(User* user1, User* user2);
 	void printUsers(TCPSocket* peer);
 	virtual ~ServerSDK();
 };

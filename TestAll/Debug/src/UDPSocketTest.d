@@ -1,16 +1,16 @@
-src/UDPSocketTest.d: ../src/UDPSocketTest.cpp \
- /home/user/Desktop/lab10/SocketUtils/src/UDPSocket.h \
- /home/user/Desktop/lab10/SocketUtils/src/Socket.h \
- /home/user/Desktop/lab10/SocketUtils/src/MThread.h \
- /home/user/Desktop/lab10/SocketUtils/src/FileInterface.h \
+src/UDPSocketTest.o: ../src/UDPSocketTest.cpp \
+ /home/eontorch/NPLgit/SocketUtils/src/UDPSocket.h \
+ /home/eontorch/NPLgit/SocketUtils/src/Socket.h \
+ /home/eontorch/NPLgit/SocketUtils/src/MThread.h \
+ /home/eontorch/NPLgit/SocketUtils/src/FileInterface.h \
  ../src/UDPSocketTest.h
 
-/home/user/Desktop/lab10/SocketUtils/src/UDPSocket.h:
+/home/eontorch/NPLgit/SocketUtils/src/UDPSocket.h:
 
-/home/user/Desktop/lab10/SocketUtils/src/Socket.h:
+/home/eontorch/NPLgit/SocketUtils/src/Socket.h:
 
-/home/user/Desktop/lab10/SocketUtils/src/MThread.h:
+/home/eontorch/NPLgit/SocketUtils/src/MThread.h:
 
-/home/user/Desktop/lab10/SocketUtils/src/FileInterface.h:
+/home/eontorch/NPLgit/SocketUtils/src/FileInterface.h:
 
 ../src/UDPSocketTest.h:
