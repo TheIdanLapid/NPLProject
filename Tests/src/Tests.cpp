@@ -166,7 +166,6 @@ int main() {
 
 	sleep(3);
 
-
 	success = sendCommand(socket, DECLINE_MATCH);
 
 	success = sendCommand(sock1, OPEN_MATCH_RANDOM);
