@@ -27,6 +27,7 @@ class User : MThread {
 	bool loggedIn;
 public:
 	User();
+	User(User* user);
 	User(string name, string pass);
 	User(string name, string pass, int score);
 	bool login();

@@ -23,7 +23,8 @@ void ServerSDK::handlePeer(TCPSocket* peer) {
 }
 
 int ServerSDK::openGameSession(User* user1, User* user2) {
-	return 0;
+	int success = gameManager->openGameSession(user1,user2);
+	return success;
 }
 
 DispatcherHandler::~DispatcherHandler() {

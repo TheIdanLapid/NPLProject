@@ -39,6 +39,23 @@ User::User(string name, string pass, int score){
 	udp = NULL;
 }
 
+User::User(User* user){
+
+	if (user==NULL) {
+		cerr<<"User* is null!"<<endl; //Maybe return an empty user?
+	}
+	else {
+		this->name = user->getName();
+		this->pass = user->getPass();
+		this->score = user->getScore();
+		loggedIn = user->isLoggedIn();
+		connected = user->isConnected();
+		onGame = user->isOnGame();
+		tcp = user->getTcp();
+		udp = user->getUdp();
+	}
+}
+
 
 User::~User() {
 	// TODO Auto-generated destructor stub

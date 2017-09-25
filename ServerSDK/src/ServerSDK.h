@@ -8,6 +8,7 @@
 #ifndef SERVERSDK_H_
 #define SERVERSDK_H_
 #include "FileManager.h"
+#include "GameManager.h"
 #include "Dispatcher.h"
 #include "Acceptor.h"
 
@@ -16,7 +17,7 @@ using namespace std;
 class ServerSDK : public AcceptorHandler, DispatcherHandler {
 	Acceptor* acceptor;
 	Dispatcher* dispatcher;
-//	GameManager* gameManager;
+	GameManager* gameManager;
 public:
 	ServerSDK();
 	void start();

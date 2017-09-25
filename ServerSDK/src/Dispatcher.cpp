@@ -16,7 +16,7 @@ Dispatcher::Dispatcher(DispatcherHandler* handler) {
 	this->waitingPeers = new MTCPListener();
 	mutex = PTHREAD_MUTEX_INITIALIZER;
 	peeread = false;
-
+	tcpMap = new map<TCPSocket*, User*>();
 	fm = new FileManager();
 	um = new UserManager(fm);
 }
@@ -107,10 +107,13 @@ void Dispatcher::run(){
 				string name;
 				string pass;
 
+				User *user, *user2,*user3,*u,*opp,*opp2;
+				Guard guard(&mutex);
+
 				int success;
 				switch(command){
 
-				case REGISTER :
+				case REGISTER:
 					rc = peer->recv((char*)&len,4); //recv msg length
 					if(rc<0){
 						cerr<<"Dispatcher: Fail to read command from socket"<<endl;
@@ -129,7 +132,7 @@ void Dispatcher::run(){
 					um->registerUser(name,pass);
 					break;
 
-				case LOGIN :
+				case LOGIN:
 					rc = peer->recv((char*)&len,4); //recv msg length
 					if(rc<0){
 						cerr<<"Dispatcher: Fail to read command from socket"<<endl;
@@ -146,83 +149,101 @@ void Dispatcher::run(){
 					pass = data.substr(data.find_first_of(":") + 1);
 
 					success = um->loginUser(name,pass);
-//					if (success == -2) {
-//
-//					}
-//					else if (success == -1) {
-//
-//					}
-//					else {
-//
-//					}
 					if (success == 0) {
-						User* user = new User(name,pass);
+						cout<<"LOGIN SUCCESS"<<endl;
+						user = new User(name,pass);
 						user->setTcp(peer);
 						user->setLoggedIn(true);
-						tcpMap.insert(make_pair(peer,*user));
+						tcpMap->insert(make_pair(peer,user));
 					}
 					break;
+
 				case SHOW_USERS:
 					printLoggedUsers(peer);
 					break;
-//				case OPEN_MATCH_WITH_USER:
-//					//CHECK IF LOGGED IN
-//
-//
-//					cout<<"Dispatcher: Got open session command"<<endl;
-//					waitForThread();
-////					cout<<"Dispatcher: Done waiting!"<<endl;
-//					rc = peer->recv((char*)&len,4); //recv msg length
-//					if(rc<0){
-//						cerr<<"Dispatcher: Fail to read command from socket"<<endl;
-//					}
-//					len = ntohl(len);
-//					rc = peer->recv(buff,len); //recv msg
-//					if(rc<0){
-//						cerr<<"Dispatcher: Fail to read command from socket"<<endl;
-//					}
-//					buff[len] = '\0';
-//					data = buff;
-//
-//
-//					ip = data.substr(0,data.find_first_of(":"));
-//					port = atoi((data.substr(data.find_first_of(":") + 1)).c_str());
-//					int index = getPeerIndex(ip,port);
-//					if(index!=-1){
-//						int com = handler->managePeerSession(peer,peers->sockets[index]);
-//						if(com==SESSION_ESTABLISHED){
-//							cout<<"Dispatcher: SESSION_ESTABLISHED"<<endl;
-//							sendFeedback(peer,6);
-//							removePeer(peer); //remove the peer that requested to open session
-//							sendFeedback(peers->sockets[index],6);
-//							removePeer(peers->sockets[index]);//remove the other peer
-//						}
-//						else if(com==SESSION_REFUSED){
-//							cout<<"Dispatcher: SESSION_REFUSED"<<endl;
-//							sendFeedback(peer,5);
-//						}
-//					}
-//					else
-//					{
-//						cout<<"Dispatcher: Peer not found!"<<endl;
-//						sendFeedback(peer,5);
-//					}
-//					break;
-				}
-			}
-//		}
-//		cout<<"Dispatcher: !closed"<<endl;
-	}
+
+
+				case OPEN_MATCH_RANDOM:
+					user2 = getUserFromTCPMap(peer);
+					if (user2 != NULL) {
+						if (tcpMap->size()==1) {
+							cout<<"You're all alone! Wait for more players to join!"<<endl;
+							break;
+						}
+
+						//If one or more of the players is already in the game
+						if (user2->isOnGame() || opp->isOnGame()) {
+							cerr<<"You or your opponent are already in a game!!! Exit the game first!"<<endl;
+							break;
+						}
+
+						opp = tcpMap->begin()->second;
+						if (opp->getName()==user2->getName()) { //The same user
+							opp = (tcpMap->begin()++)->second;
+							user2->setUdp(new UDPSocket(opp->getTcp()->getPort()));
+							opp->setUdp(new UDPSocket(user2->getTcp()->getPort()));
+							handler->openGameSession(user2,opp);
+						}
+						else {
+							user2->setUdp(new UDPSocket(opp->getTcp()->getPort()));
+							opp->setUdp(new UDPSocket(user2->getTcp()->getPort()));
+							handler->openGameSession(user2,opp);
+						}
+					}
+					break;
+
+				case OPEN_MATCH_WITH_USER:
+					//CHECK IF LOGGED IN
+					user3 = getUserFromTCPMap(peer);
+
+					if (user3 != NULL) {
+						rc = peer->recv((char*)&len,4); //recv msg length
+						if (rc<0){
+							cerr<<"Dispatcher: Fail to read command from socket"<<endl;
+						}
+						len = ntohl(len);
+						rc = peer->recv(buff,len); //recv msg
+						if (rc<0){
+							cerr<<"Dispatcher: Fail to read command from socket"<<endl;
+						}
+						buff[len] = '\0';
+						name = buff;
+						//Search the map for the opp's name
+
+						map<TCPSocket*, User*>::iterator pos;
+						for (pos = (*tcpMap).begin(); pos != (*tcpMap).end(); ++pos) {
+							u = pos->second;
+							if(u->getName()==name)
+								opp2 = u;
+						}
+						if (opp2 == NULL) {
+							cerr<<"Opponent's name not found!";
+							break;
+						}
+
+						user3->setUdp(new UDPSocket(opp2->getTcp()->getPort()));
+						opp2->setUdp(new UDPSocket(user3->getTcp()->getPort()));
+						handler->openGameSession(user3,opp2);
+					} //if
+				break;
+			} //switch
+		} //else
+		cout<<"Dispatcher: !closed"<<endl;
+	} //while
 	cout<<"Dispatcher: End of dispatcher run loop"<<endl;
 }
 
 void Dispatcher::printLoggedUsers(TCPSocket* peer) {
-	cout<<"Printing registered users: "<<endl;
-	map<TCPSocket*, User>::iterator pos;
-	for (pos = tcpMap.begin(); pos != tcpMap.end(); ++pos) {
-		User user = pos->second;
+	waitForThread();
+	cout<<"Printing logged in users: "<<endl;
+//	map<TCPSocket*, User*>::iterator pos;
+	map<TCPSocket*, User*>::iterator pos;
+	cout<<"MAP SIZE: "<<tcpMap->size()<<endl;
+	for (pos = (*tcpMap).begin(); pos != (*tcpMap).end(); ++pos) {
+		User* user = pos->second;
+		cout<<user->getName()+'\n'<<endl;
 //		cout << "key: " << pos->first << " values: pass: " << pos->second.first << " score: " <<pos->second.second << endl;
-		int res = peer->write((char*)&user.getName()+'\n',sizeof(user.getName())+1);
+		int res = peer->write((char*)&user->getName()+'\n',sizeof(user->getName())+1);
 
 		if (res<4) {
 			cout<<"Dispatcher: Could not print name! "<<endl;
@@ -238,6 +259,19 @@ int Dispatcher::readCommand(TCPSocket* peer){
 		return -1;
 	}
 	return ntohl(rcvCmd);
+}
+
+User* Dispatcher::getUserFromTCPMap(TCPSocket* sock) {
+	map<TCPSocket*, User*>::iterator iter;
+	iter = tcpMap->find(sock);
+	if(iter != (*tcpMap).end()) {
+		User* user = new User(iter->second);
+		return user;
+	}
+	else {
+		cerr<<"getUserFromTCPMap: No such user"<<endl;
+		return NULL;
+	}
 }
 
 Dispatcher::~Dispatcher() {

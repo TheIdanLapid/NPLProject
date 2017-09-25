@@ -12,6 +12,31 @@ using namespace std;
 
 using namespace std;
 
+//Move me to CLIENT
+int sendCommand(TCPSocket* socket, int com, string rest) {
+	int cmdNet = htonl(com);
+	int res = socket->write((char*)&cmdNet,4); //the command int from the protocol
+	if (res<4)
+		return -1;
+	int len = rest.length();
+	int lenNet = htonl(len);
+	res = socket->write((char*)&lenNet,4); //the length of the message
+	if (res<4)
+		return -1;
+	res = socket->write(rest.c_str(),len); //the message
+	if (res<4)
+		return -1;
+	return 1;
+}
+
+int sendCommand(TCPSocket* socket, int com) {
+	int cmdNet = htonl(com);
+	int res = socket->write((char*)&cmdNet,4); //the command int from the protocol
+	if (res<4)
+		return -1;
+	return 1;
+}
+
 void printMap(FileManager* fm) {
 	cout<<"printinggGgggg"<<endl;
 	uMap* map = fm->getUsersMap(); //uMap is defined in Protocol.h as: map<string,pair<string,int> >
@@ -56,6 +81,7 @@ int main() {
 	server->start();
 	sleep(2);
 	TCPSocket* socket = new TCPSocket(IP,SERVER_PORT);
+	TCPSocket* sock1 = new TCPSocket(IP,SERVER_PORT);
 //	server->handlePeer(socket);
 //	string name = "Rotem";
 //	string pass = "Lapid";
@@ -74,22 +100,67 @@ int main() {
 //	cout<<um->loginUser("Rotem","Lapids")<<endl;
 //	cout<<um->loginUser("Rostem","Lapid")<<endl;
 
-	int cmdNet = htonl(1);
-	int res = socket->write((char*)&cmdNet,4); //the command int from the protocol
-	if (res<4)
-		return -1;
+	sleep(2);
 
-	int len = strlen("userrrrr:passsss");
-	int lenNet = htonl(len);
-	res = socket->write((char*)&lenNet,4); //the length of the message
-	if (res<4)
-		return -1;
-	res = socket->write("userrrrr:passsss",len); //the message
-	if (res<4)
-		return -1;
+	int success;
 
-	sleep(4);
-	server->printUsers(socket);
+	/*
+	 * REGISTER
+	 */
+
+
+	success = sendCommand(socket, REGISTER, "idan:1234");
+
+	if (success) {
+		cout<<"Registered!"<<endl;
+	}
+
+	/*
+	 * LOGIN
+	 */
+
+	success = sendCommand(socket, LOGIN, "idan:1234");
+
+	if (success) {
+		cout<<"Logged in!"<<endl;
+	}
+
+	sleep(2);
+
+	/*
+	 * SHOW USERS
+	 */
+
+	success = sendCommand(socket, SHOW_USERS);
+
+	/*
+	 * REGISTER
+	 */
+
+
+	success = sendCommand(sock1, REGISTER, "shdema:acdsx");
+
+	if (success) {
+		cout<<"Registered!"<<endl;
+	}
+
+	/*
+	 * LOGIN
+	 */
+
+	success = sendCommand(sock1, LOGIN, "shdema:acdsx");
+
+	if (success) {
+		cout<<"Logged in!"<<endl;
+	}
+
+	sleep(2);
+
+	/*
+	 * SHOW USERS
+	 */
+
+	success = sendCommand(socket, SHOW_USERS);
 
 	while (true){}
 	cout<<"End of TEST"<<endl;

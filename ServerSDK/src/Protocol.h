@@ -27,10 +27,11 @@ typedef map<string,pair<string,int> > uMap;
 #define LOGIN					2	//Followed by user:pass
 #define SHOW_USERS				3
 #define OPEN_MATCH_WITH_USER 	4	//Followed by user
-#define ACCEPT_MATCH			5
-#define DECLINE_MATCH			6
-#define EXIT_MATCH				7
-#define EXIT_SERVER				8
+#define OPEN_MATCH_RANDOM		5
+#define ACCEPT_MATCH			6
+#define DECLINE_MATCH			7
+#define EXIT_MATCH				8
+#define EXIT_SERVER				9
 
 #define PATH "src/users.txt"
 
