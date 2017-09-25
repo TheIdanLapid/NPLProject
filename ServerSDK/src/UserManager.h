@@ -7,7 +7,7 @@
 
 #include "Protocol.h"
 #include "User.h"
-#include "MultipleTCPSocketsListener.h"
+#include "MTCPListener.h"
 #include <vector>
 #include <string>
 #include "FileManager.h"
@@ -21,12 +21,12 @@ class UserManager {
 	vector<User*> unknownUsers;
 	vector<User*> loggedUsers;
 	FileManager* fileManager; //uMap is defined in Protocol.h as: map<string,pair<string,int> >
-	MultipleTCPSocketsListener* listener;
+	MTCPListener* listener;
 public:
 	UserManager(FileManager* fm);
 	virtual ~UserManager();
-	MultipleTCPSocketsListener* getListener() const;
-	void setListener(MultipleTCPSocketsListener* listener);
+	MTCPListener* getListener() const;
+	void setListener(MTCPListener* listener);
 	vector<User*> getLoggedUsers();
 	void setLoggedUsers(const vector<User*>& loggedUsers);
 	vector<User*> getUnknownUsers();

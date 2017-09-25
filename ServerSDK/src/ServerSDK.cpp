@@ -40,5 +40,6 @@ ServerSDK::~ServerSDK() {
 
 void ServerSDK::start() {
 	acceptor->start();
+	sleep(3);
 	dispatcher->start();
 }

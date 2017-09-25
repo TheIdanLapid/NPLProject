@@ -7,6 +7,7 @@
 
 #include "MThread.h"
 #include "TCPSocket.h"
+#include "MTCPListener.h"
 #include "Guard.h"
 #include <string>
 #include <strings.h>
@@ -33,8 +34,8 @@ class Dispatcher: public MThread {
 	UserManager* um;
 	typedef vector<TCPSocket*> tSockets;
 	map<TCPSocket*, User> tcpMap; //Maps a user to it's tcpSocket
-	MultipleTCPSocketsListener* waitingPeers;
-	MultipleTCPSocketsListener* peers;
+	MTCPListener* waitingPeers;
+	MTCPListener* peers;
 	DispatcherHandler* handler;
 	bool peersOn,closed;
 	pthread_mutex_t mutex;

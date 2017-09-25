@@ -11,18 +11,18 @@ namespace std {
 
 UserManager::UserManager(FileManager* fm) {
 	fileManager = fm;
-	listener = new MultipleTCPSocketsListener();
+	listener = new MTCPListener();
 }
 
 UserManager::~UserManager() {
 	// TODO Auto-generated destructor stub
 }
 
-MultipleTCPSocketsListener* UserManager::getListener() const {
+MTCPListener* UserManager::getListener() const {
 	return listener;
 }
 
-void UserManager::setListener (MultipleTCPSocketsListener* listener) {
+void UserManager::setListener (MTCPListener* listener) {
 	this->listener = listener;
 }
 
@@ -65,6 +65,7 @@ int UserManager::loginUser(string name, string pass) {
 }
 
 void UserManager::registerUser(string name,string pass) {
+	fileManager->readUsers();
 	User* user = new User(name, pass);
 	uMap::iterator iter;
 	uMap* map = getUsers();

@@ -10,10 +10,10 @@ using namespace std;
 
 Dispatcher::Dispatcher(DispatcherHandler* handler) {
 	this->handler = handler;
-	this->peers = new MultipleTCPSocketsListener();
 	this->peersOn = false;
 	this->closed = false;
-	this->waitingPeers = new MultipleTCPSocketsListener();
+	this->peers = new MTCPListener();
+	this->waitingPeers = new MTCPListener();
 	mutex = PTHREAD_MUTEX_INITIALIZER;
 	peeread = false;
 
@@ -58,34 +58,38 @@ Dispatcher::Dispatcher(DispatcherHandler* handler) {
 
 
 void Dispatcher::addPeer(TCPSocket* sock){
-	waitForThread();
+//	waitForThread();
 	Guard guard(&mutex);
 //	User* user = new User();
 //	user->setTcp(sock);
 //	um->getUnknownUsers().push_back(user); //Add to waiting users vector
-	waitingPeers->addSocket(sock); //Add to waiting sockets vector
+	waitingPeers->add(sock); //Add to waiting sockets vector
 //	tcpMap.insert(make_pair(sock,user)); //Add to map
 	cout<<"Dispatcher: Added peer to waitingPeers list with port: "<<sock->getPort()<<endl;
 }
 
 void Dispatcher::run(){
 	while(!closed){
-//		cout<<"Dispatcher: size of peers: "<<peers->sockets.size()<<endl;
-		MultipleTCPSocketsListener mtcp;
+	//		cout<<"Dispatcher: size of peers: "<<peers->sockets.size()<<endl;
+			MTCPListener mtcp;
 
-		mtcp.addSockets(peers->sockets);
-		mtcp.addSockets(waitingPeers->sockets);
+			mtcp.addAll(peers->sockets);
+			mtcp.addAll(waitingPeers->sockets);
 
-		peers->sockets.clear();
-		waitingPeers->sockets.clear();
+			peers->sockets.clear();
+			waitingPeers->sockets.clear();
 
-		peers->sockets = mtcp.sockets; //now we update the original peers list
+			//now we update the original peers list
 
-			TCPSocket* peer = mtcp.listenToSocket(4);
+			peers->sockets = mtcp.sockets;
 
-			if(!peer) { //timeout without any peer ready
-				continue;
-			}
+	//		if (peersOn&& !peeread){
+				TCPSocket* peer = mtcp.listen(4);
+
+				if(!peer){ //timeout without any peer ready
+	//				cout<<"Dispatcher: there is no ready peer"<<endl;
+					continue;
+				}
 			else
 			{
 				cout<<"Dispatcher: peer: "<<peer->getPort()<<" is now connected!"<<endl;
@@ -123,7 +127,6 @@ void Dispatcher::run(){
 					pass = data.substr(data.find_first_of(":") + 1);
 
 					um->registerUser(name,pass);
-					cout<<"REGISTERED "<<name<<" SUCCESSFULLY!"<<endl;
 					break;
 
 				case LOGIN :
@@ -214,6 +217,7 @@ void Dispatcher::run(){
 }
 
 void Dispatcher::printLoggedUsers(TCPSocket* peer) {
+	cout<<"Printing registered users: "<<endl;
 	map<TCPSocket*, User>::iterator pos;
 	for (pos = tcpMap.begin(); pos != tcpMap.end(); ++pos) {
 		User user = pos->second;

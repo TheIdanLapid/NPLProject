@@ -53,14 +53,10 @@ int main() {
 
 
 	ServerSDK* server = new ServerSDK();
-	TCPSocket* socket = new TCPSocket(IP,SERVER_PORT);
 	server->start();
-	int success = socket->connect(IP,SERVER_PORT);
-	while (success<0) {
-		sleep(2);
-		success = socket->connect(IP,SERVER_PORT);
-	}
-	server->handlePeer(socket);
+	sleep(2);
+	TCPSocket* socket = new TCPSocket(IP,SERVER_PORT);
+//	server->handlePeer(socket);
 //	string name = "Rotem";
 //	string pass = "Lapid";
 //	server->dispatcher->um->registerUser(name,pass);
@@ -92,8 +88,10 @@ int main() {
 	if (res<4)
 		return -1;
 
+	sleep(4);
 	server->printUsers(socket);
 
+	while (true){}
 	cout<<"End of TEST"<<endl;
 
 
