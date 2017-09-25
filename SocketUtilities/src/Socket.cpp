@@ -54,7 +54,7 @@ int Socket::bind(int port){
 
 //will be executed from client socket
 //in tcp socket - the arguments ip,port are of the server
-//in udp socket - the arguments ip'port are of the other peer we want to send msg to
+//in udp socket - the arguments ip,port are of the other peer we want to send msg to
 //socket fd - the client fd
 int Socket::connect(string ip, int port){
 

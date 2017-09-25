@@ -45,12 +45,15 @@ User::~User() {
 }
 
 bool User::login() {
+	return false;
 }
 
 bool User::openMatch(string name) {
+	return false;
 }
 
 bool User::openMatch() {
+	return false;
 }
 
 void User::run() {
