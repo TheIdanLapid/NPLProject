@@ -35,6 +35,7 @@ public:
 	Socket();
 	Socket(int type);
 	int bind(int port);
+	char * getIP() const;
 	virtual int connect(string ip, int port);
 	virtual int read(char* buff, int size);
 	int write(const string& msg);

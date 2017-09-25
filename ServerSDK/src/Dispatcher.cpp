@@ -69,7 +69,12 @@ void Dispatcher::addPeer(TCPSocket* sock){
 }
 
 void Dispatcher::run(){
+	time_t t;
+	map<TCPSocket*, User*>::iterator iter;
+	srand((unsigned) time(&t));
+	int r;
 	while(!closed){
+		r = rand();
 	//		cout<<"Dispatcher: size of peers: "<<peers->sockets.size()<<endl;
 			MTCPListener mtcp;
 
@@ -107,7 +112,10 @@ void Dispatcher::run(){
 				string name;
 				string pass;
 
+				string accept;
+
 				User *user, *user2,*user3,*u,*opp,*opp2;
+				User *player1, *player2;
 				Guard guard(&mutex);
 
 				int success;
@@ -171,24 +179,33 @@ void Dispatcher::run(){
 							break;
 						}
 
+
+						opp = tcpMap->begin()->second;
+						if (opp->getName()==user2->getName()) { //The same user
+							r = r % tcpMap->size();
+							iter = tcpMap->begin();
+							for (int var = 0; var < r; ++var) {
+								iter++;
+							}
+							opp = iter->second; //Random user
+						}
+
 						//If one or more of the players is already in the game
 						if (user2->isOnGame() || opp->isOnGame()) {
 							cerr<<"You or your opponent are already in a game!!! Exit the game first!"<<endl;
 							break;
 						}
 
-						opp = tcpMap->begin()->second;
-						if (opp->getName()==user2->getName()) { //The same user
-							opp = (tcpMap->begin()++)->second;
-							user2->setUdp(new UDPSocket());
-							opp->setUdp(new UDPSocket(3435)); //Random udp port
-							handler->openGameSession(user2,opp);
-						}
-						else {
-							user2->setUdp(new UDPSocket());
-							opp->setUdp(new UDPSocket(3435)); //Random udp port
-							handler->openGameSession(user2,opp);
-						}
+						accept = "Hi "+opp->getName()+", do you want to play with: "+user2->getName()+"? Enter: 6 to accept, 7 to decline: ";
+						opp->getTcp()->write((char*)&accept,accept.length());
+
+						player1 = user2;
+						player2 = opp;
+						player1->setUdp(new UDPSocket());
+						player2->setUdp(new UDPSocket(opp->getTcp()->getPort()));
+
+//						handler->openGameSession(player1,player2);
+
 					}
 					break;
 
@@ -197,6 +214,7 @@ void Dispatcher::run(){
 					user3 = getUserFromTCPMap(peer);
 
 					if (user3 != NULL) {
+//						cout<<user3<<endl;
 						rc = peer->recv((char*)&len,4); //recv msg length
 						if (rc<0){
 							cerr<<"Dispatcher: Fail to read command from socket"<<endl;
@@ -208,11 +226,13 @@ void Dispatcher::run(){
 						}
 						buff[len] = '\0';
 						name = buff;
+
 						//Search the map for the opp's name
 
 						map<TCPSocket*, User*>::iterator pos;
 						for (pos = (*tcpMap).begin(); pos != (*tcpMap).end(); ++pos) {
 							u = pos->second;
+//							cout<<u;
 							if(u->getName()==name)
 								opp2 = u;
 						}
@@ -221,11 +241,35 @@ void Dispatcher::run(){
 							break;
 						}
 
-						user3->setUdp(new UDPSocket());
-						opp2->setUdp(new UDPSocket(3435));
-						handler->openGameSession(user3,opp2);
+						if (user3->isOnGame() || opp2->isOnGame()) {
+							cerr<<"You or your opponent are already in a game!!! Exit the game first!"<<endl;
+							break;
+						}
+
+						accept = "Hi "+opp2->getName()+", do you want to play with: "+user3->getName()+"? Enter: 6 to accept, 7 to decline: ";
+
+						if (opp2->getTcp()!=NULL)
+							opp2->getTcp()->write((char*)&accept,accept.length());
+
+						cout<<accept<<endl;
+//						user3->setUdp(new UDPSocket());
+//						opp2->setUdp(new UDPSocket(opp2->getTcp()->getPort()));
+
+						player1 = user3;
+						player2 = opp2;
+						player1->setUdp(new UDPSocket());
+						player2->setUdp(new UDPSocket(opp2->getTcp()->getPort()));
+//						handler->openGameSession(user3,opp2);
 					} //if
-				break;
+					break;
+				case ACCEPT_MATCH:
+					handler->openGameSession(player1,player2);
+					break;
+				case DECLINE_MATCH:
+					accept = "Your opponent refused to play with you. Please choose again.\n";
+					cout<<accept<<endl;
+					peer->write((char*)&accept,accept.length());
+					break;
 			} //switch
 		} //else
 		cout<<"Dispatcher: !closed"<<endl;

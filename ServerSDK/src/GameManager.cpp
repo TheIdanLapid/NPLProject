@@ -16,6 +16,7 @@ GameManager::GameManager() {
 
 int GameManager::openGameSession(User* user1, User* user2) {
 	Game* game = new Game(user1,user2);
+	return 1;
 }
 
 GameManager::~GameManager() {

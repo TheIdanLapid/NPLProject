@@ -17,6 +17,14 @@ Socket::Socket(){
 	setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof optval);
 }
 
+char * Socket::getIP() const{
+	struct sockaddr_in localAddress;
+	unsigned int addressLength=sizeof(localAddress);
+	bzero(&localAddress, sizeof(localAddress));
+	getsockname(fd, (struct sockaddr*)&localAddress, &addressLength);
+	return inet_ntoa(localAddress.sin_addr);
+}
+
 //the default constructor creates socket according to the type received as argument
 Socket::Socket(int type) {
 	socket_fd = socket (AF_INET, type, 0);

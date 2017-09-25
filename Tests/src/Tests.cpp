@@ -164,6 +164,18 @@ int main() {
 
 	success = sendCommand(sock1, OPEN_MATCH_WITH_USER, "idan");
 
+	sleep(3);
+
+
+	success = sendCommand(socket, DECLINE_MATCH);
+
+	success = sendCommand(sock1, OPEN_MATCH_RANDOM);
+
+	sleep(3);
+
+	success = sendCommand(socket, ACCEPT_MATCH);
+
+
 	while (true){}
 	cout<<"End of TEST"<<endl;
 

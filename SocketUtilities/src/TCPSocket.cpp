@@ -83,6 +83,7 @@ int TCPSocket::write(const char* msg,int size){
 int TCPSocket::write(const string& msg)
 {
 	Socket::write(msg);
+	return 1;
 }
 
 int TCPSocket::getPort(){

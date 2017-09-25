@@ -10,8 +10,9 @@
 namespace std {
 
 Game::Game() {
-	// TODO Auto-generated constructor stub
-
+	udp1 = NULL;
+	udp2 = NULL;
+	tcp2 = NULL;
 }
 
 Game::~Game() {
@@ -21,13 +22,20 @@ Game::~Game() {
 } /* namespace std */
 
 Game::Game(User* user1, User* user2) {
-	UDPSocket* udp1 = user1->getUdp();
-	UDPSocket* udp2 = user2->getUdp();
-	sockaddr_in udp2_struct = udp2->local;
-	cout<<"Local:"<<ntohs(udp2_struct.sin_port)<<endl;
-	cout<<"Remote:"<<ntohs(udp2->remote.sin_port)<<endl;
-	int connect = udp1->connect(IP,ntohs(udp2_struct.sin_port));
+	udp1 = user1->getUdp();
+	udp2 = user2->getUdp();
+	tcp2 = user2->getTcp();
+
+//	udp1->bind(tcp2->getPort());
+	int connect = udp1->connect(udp2->getIP(),tcp2->getPort());
+	cout<<udp2->getIP()<<endl;
+	cout<<"Port of: "<<user2->getName()<<" "<<tcp2->getPort()<<endl;
 	cout<<connect<<endl;
+	start();
+}
+
+void Game::run() {
+
 	udp1->write("HI");
 
 	char buf[100];

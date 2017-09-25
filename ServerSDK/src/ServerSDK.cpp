@@ -10,6 +10,7 @@
 ServerSDK::ServerSDK() {
 	acceptor = new Acceptor(this);
 	dispatcher = new Dispatcher(this);
+	gameManager = new GameManager();
 }
 
 void ServerSDK::printUsers(TCPSocket* peer) {

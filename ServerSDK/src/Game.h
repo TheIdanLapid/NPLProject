@@ -15,9 +15,13 @@
 
 namespace std {
 
-class Game {
+class Game : MThread {
+	UDPSocket* udp1;
+	UDPSocket* udp2;
+	TCPSocket* tcp2;
 public:
 	Game();
+	void run();
 	Game(User* user1, User* user2);
 	virtual ~Game();
 };

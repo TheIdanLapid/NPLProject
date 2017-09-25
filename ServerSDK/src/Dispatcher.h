@@ -13,8 +13,10 @@
 #include <string>
 #include <strings.h>
 #include <iostream>
+#include <iterator>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "FileManager.h"
 #include "UserManager.h"
 #include <vector>
