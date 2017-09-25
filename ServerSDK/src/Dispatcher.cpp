@@ -58,6 +58,7 @@ Dispatcher::Dispatcher(DispatcherHandler* handler) {
 
 
 void Dispatcher::addPeer(TCPSocket* sock){
+	waitForThread();
 	Guard guard(&mutex);
 //	User* user = new User();
 //	user->setTcp(sock);
@@ -122,6 +123,7 @@ void Dispatcher::run(){
 					pass = data.substr(data.find_first_of(":") + 1);
 
 					um->registerUser(name,pass);
+					cout<<"REGISTERED "<<name<<" SUCCESSFULLY!"<<endl;
 					break;
 
 				case LOGIN :

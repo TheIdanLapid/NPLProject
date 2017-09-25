@@ -53,8 +53,8 @@ int main() {
 
 
 	ServerSDK* server = new ServerSDK();
-	server->start();
 	TCPSocket* socket = new TCPSocket(IP,SERVER_PORT);
+	server->start();
 	int success = socket->connect(IP,SERVER_PORT);
 	while (success<0) {
 		sleep(2);
@@ -63,7 +63,7 @@ int main() {
 	server->handlePeer(socket);
 //	string name = "Rotem";
 //	string pass = "Lapid";
-//	um->registerUser(name,pass);
+//	server->dispatcher->um->registerUser(name,pass);
 //
 //	fm->setScore(shdema,7);
 //
