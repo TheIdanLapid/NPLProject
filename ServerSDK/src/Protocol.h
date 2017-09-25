@@ -31,6 +31,6 @@ typedef map<string,pair<string,int> > uMap;
 #define EXIT_MATCH				7
 #define EXIT_SERVER				8
 
-#define PATH "/home/user/Ddesktop/users.txt"
+#define PATH "src/users.txt"
 
 #endif /* PROTOCOL_H_ */

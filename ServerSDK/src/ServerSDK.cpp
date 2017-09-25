@@ -9,11 +9,11 @@
 
 ServerSDK::ServerSDK() {
 	acceptor = new Acceptor(this);
-	dispacher = new Dispatcher(this);
+	dispatcher = new Dispatcher(this);
 }
 
 void ServerSDK::printUsers(TCPSocket* peer) {
-	dispacher->printLoggedUsers(peer);
+	dispatcher->printLoggedUsers(peer);
 }
 
 void ServerSDK::handlePeer(TCPSocket* peer) {
@@ -36,3 +36,7 @@ ServerSDK::~ServerSDK() {
 	// TODO Auto-generated destructor stub
 }
 
+void ServerSDK::start() {
+	acceptor->start();
+	dispatcher->start();
+}

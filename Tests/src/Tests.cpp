@@ -13,6 +13,7 @@ using namespace std;
 using namespace std;
 
 void printMap(FileManager* fm) {
+	cout<<"printinggGgggg"<<endl;
 	uMap* map = fm->getUsersMap(); //uMap is defined in Protocol.h as: map<string,pair<string,int> >
 	uMap::iterator pos;
 	for (pos = (*map).begin(); pos != (*map).end(); ++pos) {
@@ -21,54 +22,56 @@ void printMap(FileManager* fm) {
 }
 
 int main() {
-	FileManager* fm = new FileManager();
-	fm->clearFile();
 
-	User user;
-	UserManager* um = new UserManager(fm);
-	user.setName("Idan");
-	user.setPass("sisma1");
-	user.setScore(2);
-	fm->writeUser(user);
-	cout<<"Finished writing "<<user.getName()<<endl;
-
-	User shdema;
-	shdema.setName("Shdema");
-	shdema.setPass("sisma2");
-	shdema.setScore(56);
-	fm->writeUser(shdema);
-	cout<<"Finished writing "<<shdema.getName()<<endl;
+//	FileManager* fm = new FileManager();
+//	fm->clearFile();
+//
+//	User user;
+//	UserManager* um = new UserManager(fm);
+//	user.setName("Idan");
+//	user.setPass("sisma1");
+//	user.setScore(2);
+//	fm->writeUser(user);
+//	cout<<"Finished writing "<<user.getName()<<endl;
+//
+//	User shdema;
+//	shdema.setName("Shdema");
+//	shdema.setPass("sisma2");
+//	shdema.setScore(56);
+//	fm->writeUser(shdema);
+//	cout<<"Finished writing "<<shdema.getName()<<endl;
 
 //	fm->readUsers();
-	printMap(fm);
+//	printMap(fm);
 //	uMap* map = fm->getUsersMap(); //uMap is defined in Protocol.h as: map<string,pair<string,int> >
 //	uMap::iterator pos;
 //	for (pos = (*map).begin(); pos != (*map).end(); ++pos) {
 //		cout << "key: " << pos->first << " values: pass: " << pos->second.first << " score: " <<pos->second.second << endl;
 //	}
-	string name = "Rotem";
-	string pass = "Lapid";
-	um->registerUser(name,pass);
 
-	fm->setScore(shdema,7);
 
-	User user4;
-	user4.setName("Oren");
-	user4.setPass("sisma6");
-	user4.setScore(9);
-	fm->writeUser(user4);
-	cout<<"Finished writing "<<user4.getName()<<endl;
-
-	cout<<um->loginUser("Rotem","Lapid")<<endl;
-	cout<<um->loginUser("Rotem","Lapids")<<endl;
-	cout<<um->loginUser("Rostem","Lapid")<<endl;
 
 
 	ServerSDK* server = new ServerSDK();
 	TCPSocket* socket = new TCPSocket("127.0.0.1",SERVER_PORT);
 //	peer->connect("127.0.0.1",SERVER_PORT);
 	server->handlePeer(socket);
-
+//	string name = "Rotem";
+//	string pass = "Lapid";
+//	um->registerUser(name,pass);
+//
+//	fm->setScore(shdema,7);
+//
+//	User user4;
+//	user4.setName("Oren");
+//	user4.setPass("sisma6");
+//	user4.setScore(9);
+//	fm->writeUser(user4);
+//	cout<<"Finished writing "<<user4.getName()<<endl;
+//
+//	cout<<um->loginUser("Rotem","Lapid")<<endl;
+//	cout<<um->loginUser("Rotem","Lapids")<<endl;
+//	cout<<um->loginUser("Rostem","Lapid")<<endl;
 
 	int cmdNet = htonl(1);
 	int res = socket->write((char*)&cmdNet,4); //the command int from the protocol
