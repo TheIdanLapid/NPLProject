@@ -162,6 +162,8 @@ int main() {
 
 	success = sendCommand(socket, SHOW_USERS);
 
+	success = sendCommand(sock1, OPEN_MATCH_WITH_USER, "idan");
+
 	while (true){}
 	cout<<"End of TEST"<<endl;
 

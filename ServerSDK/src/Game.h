@@ -9,6 +9,9 @@
 #define SRC_GAME_H_
 
 #include "User.h"
+#include <iostream>
+#include <string.h>
+#include <stdio.h>
 
 namespace std {
 

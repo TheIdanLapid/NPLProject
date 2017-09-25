@@ -44,7 +44,7 @@ all: TestAll
 TestAll: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: GCC C++ Linker'
-	g++ -L"/home/eontorch/NPLgit/SocketUtils/Debug" -L"/home/eontorch/NPLgit/TCPMSNServer/Debug" -L"/home/eontorch/NPLgit/TCPMSNClient/Debug" -pthread -o "TestAll" $(OBJS) $(USER_OBJS) $(LIBS)
+	g++ -pthread -o "TestAll" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 

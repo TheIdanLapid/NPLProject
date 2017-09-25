@@ -180,13 +180,13 @@ void Dispatcher::run(){
 						opp = tcpMap->begin()->second;
 						if (opp->getName()==user2->getName()) { //The same user
 							opp = (tcpMap->begin()++)->second;
-							user2->setUdp(new UDPSocket(opp->getTcp()->getPort()));
-							opp->setUdp(new UDPSocket(user2->getTcp()->getPort()));
+							user2->setUdp(new UDPSocket());
+							opp->setUdp(new UDPSocket(3435)); //Random udp port
 							handler->openGameSession(user2,opp);
 						}
 						else {
-							user2->setUdp(new UDPSocket(opp->getTcp()->getPort()));
-							opp->setUdp(new UDPSocket(user2->getTcp()->getPort()));
+							user2->setUdp(new UDPSocket());
+							opp->setUdp(new UDPSocket(3435)); //Random udp port
 							handler->openGameSession(user2,opp);
 						}
 					}
@@ -221,8 +221,8 @@ void Dispatcher::run(){
 							break;
 						}
 
-						user3->setUdp(new UDPSocket(opp2->getTcp()->getPort()));
-						opp2->setUdp(new UDPSocket(user3->getTcp()->getPort()));
+						user3->setUdp(new UDPSocket());
+						opp2->setUdp(new UDPSocket(3435));
 						handler->openGameSession(user3,opp2);
 					} //if
 				break;
@@ -403,7 +403,7 @@ void Dispatcher::close(){
 	if(!peers->sockets.empty())
 		peers->sockets.clear();
 }
-
+a
 Dispatcher::~Dispatcher() {
 	cout<<"Dispatcher: Dispatcher closed!"<<endl;
 }
